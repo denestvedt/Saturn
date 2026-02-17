@@ -34,7 +34,7 @@ export function WeeklyGrid({
   }
 
   const isScheduled = (habit: Habit, date: Date): boolean => {
-    const freq = habit.frequency as HabitFrequency
+    const freq = habit.frequency as unknown as HabitFrequency
     return isDayScheduled(date, freq)
   }
 

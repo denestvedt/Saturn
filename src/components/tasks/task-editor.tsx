@@ -51,7 +51,7 @@ function getInitialState(task: Task | null, lists: List[]): FormState {
     scheduled_date: task?.scheduled_date ?? '',
     is_top_three: task?.is_top_three ?? false,
     is_recurring: task?.is_recurring ?? false,
-    recurrence_rule: (task?.recurrence_rule as RecurrenceRule) ??
+    recurrence_rule: (task?.recurrence_rule as unknown as RecurrenceRule) ??
       createRecurrenceRule('daily'),
   }
 }
@@ -98,7 +98,7 @@ export function TaskEditor({
         scheduled_date: form.scheduled_date || null,
         is_top_three: form.is_top_three,
         is_recurring: form.is_recurring,
-        recurrence_rule: form.is_recurring ? form.recurrence_rule : null,
+        recurrence_rule: form.is_recurring ? (form.recurrence_rule as unknown as import('@/types/database').Json) : null,
       })
       onClose()
     } catch (error) {

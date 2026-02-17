@@ -39,6 +39,7 @@ export interface Database {
           onboarding_completed?: boolean
           updated_at?: string
         }
+        Relationships: []
       }
       lists: {
         Row: {
@@ -71,6 +72,7 @@ export interface Database {
           is_inbox?: boolean
           updated_at?: string
         }
+        Relationships: []
       }
       tasks: {
         Row: {
@@ -130,6 +132,7 @@ export interface Database {
           completed_at?: string | null
           updated_at?: string
         }
+        Relationships: []
       }
       habits: {
         Row: {
@@ -174,6 +177,7 @@ export interface Database {
           sort_order?: number
           updated_at?: string
         }
+        Relationships: []
       }
       habit_completions: {
         Row: {
@@ -198,6 +202,7 @@ export interface Database {
           count?: number
           note?: string | null
         }
+        Relationships: []
       }
       time_blocks: {
         Row: {
@@ -251,6 +256,7 @@ export interface Database {
           routine_template_id?: string | null
           updated_at?: string
         }
+        Relationships: []
       }
       weekly_plans: {
         Row: {
@@ -285,6 +291,7 @@ export interface Database {
           is_completed?: boolean
           updated_at?: string
         }
+        Relationships: []
       }
       partner_invites: {
         Row: {
@@ -309,6 +316,7 @@ export interface Database {
           invitee_email?: string | null
           status?: string
         }
+        Relationships: []
       }
       partner_links: {
         Row: {
@@ -336,6 +344,7 @@ export interface Database {
           user_a_shares?: Json
           user_b_shares?: Json
         }
+        Relationships: []
       }
       timer_sessions: {
         Row: {
@@ -372,6 +381,7 @@ export interface Database {
           reflection?: string | null
           ended_at?: string | null
         }
+        Relationships: []
       }
       push_subscriptions: {
         Row: {
@@ -395,6 +405,7 @@ export interface Database {
           keys?: Json
           user_agent?: string | null
         }
+        Relationships: []
       }
       routine_templates: {
         Row: {
@@ -426,6 +437,7 @@ export interface Database {
           blocks?: Json
           updated_at?: string
         }
+        Relationships: []
       }
     }
     Views: Record<string, never>
@@ -438,5 +450,6 @@ export interface Database {
       }
     }
     Enums: Record<string, never>
+    CompositeTypes: Record<string, never>
   }
 }

@@ -26,8 +26,28 @@ CREATE TABLE public.partner_links (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Trigger to enforce canonical ordering: always store the smaller UUID in user_a_id.
+-- This lets us use a plain unique index instead of LEAST/GREATEST (which are not IMMUTABLE).
+CREATE OR REPLACE FUNCTION public.normalize_partner_link_order()
+RETURNS TRIGGER AS $$
+DECLARE
+  temp UUID;
+BEGIN
+  IF NEW.user_a_id > NEW.user_b_id THEN
+    temp          := NEW.user_a_id;
+    NEW.user_a_id := NEW.user_b_id;
+    NEW.user_b_id := temp;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER normalize_partner_link_order
+  BEFORE INSERT ON public.partner_links
+  FOR EACH ROW EXECUTE FUNCTION public.normalize_partner_link_order();
+
 CREATE UNIQUE INDEX idx_partner_links_unique_pair
-  ON public.partner_links(LEAST(user_a_id, user_b_id), GREATEST(user_a_id, user_b_id))
+  ON public.partner_links(user_a_id, user_b_id)
   WHERE is_active = TRUE;
 
 ALTER TABLE public.partner_links ENABLE ROW LEVEL SECURITY;

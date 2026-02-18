@@ -18,137 +18,138 @@ Mobile-first PWA for ADHD users providing external structure through time-blocki
 
 **Last updated:** 2026-02-18
 
-### Completed
-- [x] Database: All 9 migrations run into Supabase (user confirmed 2026-02-18)
-- [x] Supabase project configured (`vpextfeecrpwsdnpqvdh`)
-- [x] MCP server connected (`.mcp.json`)
+**PASS 1 (Core) is complete.** Phases 1–7 are fully implemented and committed.
 
-### Created (per prior session — confirm committed to repo)
-- [ ] `package.json` (deps installed), `tsconfig.json`, `next.config.ts`, `postcss.config.mjs`, `eslint.config.mjs`, `.gitignore`, `.env.example`
-- [ ] `middleware.ts` (Supabase auth session refresh + route protection)
-- [ ] `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/globals.css`, `src/app/manifest.ts`
-- [ ] `src/lib/supabase/client.ts`, `server.ts`, `admin.ts`, `middleware.ts`
-- [ ] `src/types/database.ts`, `src/types/models.ts`
-- [ ] `src/lib/utils/cn.ts`, `src/lib/constants.ts`
-- [ ] `src/providers/supabase-provider.tsx`
-- [ ] `src/components/ui/button.tsx` (partial)
-- [ ] All `src/` subdirectories created, `public/icons/`, `supabase/migrations/`
+**What's left:**
+- Phase 8: API routes for partner invites + push notification sending (partial — partner page UI exists)
+- Phase 9: PWA install prompt, push subscription management, API routes for notifications, cron reminders, push event handler in service worker
+- Phase 10: PWA icons, README polish, responsive verification
 
 ---
 
-## Database Schema (9 Tables + RLS)
+## Database Schema (9 Tables + RLS) ✅ ALL DONE
 
-- [x] `profiles` — extends auth.users; display_name, timezone, notification_preferences, onboarding_completed. Auto-created via trigger.
-- [x] `lists` — user_id, name, color, icon, sort_order, is_inbox
-- [x] `tasks` — user_id, list_id, title, description, is_completed, is_top_three, priority, due_date, scheduled_date, time_block_id, recurrence fields
-- [x] `habits` — user_id, name, color, frequency JSONB, target_per_day, reminder_time, is_active
-- [x] `habit_completions` — habit_id, user_id, completed_date, count (unique on habit_id+date)
-- [x] `time_blocks` — user_id, title, start_time, end_time, color, category, task_ids[], recurrence fields
-- [x] `weekly_plans` — user_id, week_start (Monday), goals JSONB, reflection, energy_rating, focus_areas
-- [x] `partner_invites` — inviter_id, invitee_email, invite_token, status, expires_at
-- [x] `partner_links` — user_a_id, user_b_id, sharing preferences JSONB + `get_partner_summary()` RPC
-- [x] `timer_sessions` — user_id, duration_seconds, actual_seconds, type, task_id, time_block_id, reflection, started_at/ended_at
-- [x] `push_subscriptions` — user_id, endpoint, keys JSONB
-- [x] `routine_templates` — user_id (nullable for system), name, category, is_system, blocks JSONB
+- [x] All 9 migrations run into Supabase (confirmed 2026-02-18)
+- [x] `profiles` — auto-created via signup trigger
+- [x] `lists`, `tasks` (with recurrence fields)
+- [x] `habits`, `habit_completions`
+- [x] `time_blocks` (with recurrence fields)
+- [x] `weekly_plans`
+- [x] `partner_invites`, `partner_links` + `get_partner_summary()` RPC
+- [x] `timer_sessions`
+- [x] `push_subscriptions`
+- [x] `routine_templates` (system + user)
 - [x] RLS policies on all tables
-- [x] `get_partner_summary()` SECURITY DEFINER function
+- [x] `supabase/seed.sql` — "ADHD Starter Week", "Morning Routine", "Shutdown Routine"
 
 ---
 
 ## Implementation Phases
 
-### PASS 1 — Core
+### PASS 1 — Core ✅ COMPLETE
 
-#### Phase 1: Foundation
-- [ ] Scaffold Next.js with `create-next-app` (TypeScript, Tailwind, App Router, src dir)
-- [ ] Install all dependencies (supabase, zustand, date-fns, lucide-react, dnd-kit, framer-motion, etc.)
-- [ ] Configure Tailwind with ADHD-friendly design tokens (saturn color palette, 44px tap targets, card radius)
-- [ ] Supabase clients: browser (`createBrowserClient`), server (`createServerClient` with cookies)
-- [ ] Auth middleware (`middleware.ts`) for session refresh + route protection
-- [ ] **Auth pages:** login, signup, forgot-password, auth callback route
-- [ ] **App shell:** responsive layout — bottom nav (mobile <768px) + sidebar (desktop ≥768px)
-- [ ] **UI primitives:** button, input, textarea, checkbox, badge, card, modal, drawer, skeleton, empty-state, progress-ring, toggle, dropdown, confirm-dialog
+#### Phase 1: Foundation ✅
+- [x] `package.json`, `tsconfig.json`, `next.config.ts`, `postcss.config.mjs`, `eslint.config.mjs`, `.gitignore`, `.env.example`
+- [x] Tailwind `globals.css` with ADHD-friendly design tokens (saturn palette, 44px tap targets)
+- [x] Supabase clients: `src/lib/supabase/client.ts`, `server.ts`, `admin.ts`, `middleware.ts`
+- [x] Auth middleware: `middleware.ts` (session refresh + route protection)
+- [x] Auth pages: `login`, `signup`, `forgot-password`, auth `callback` route
+- [x] App shell: `app-shell.tsx`, `bottom-nav.tsx` (mobile), `sidebar.tsx` (desktop), `header.tsx`
+- [x] UI primitives: `button`, `input`, `textarea`, `checkbox`, `badge`, `card`, `modal`, `drawer`, `skeleton`, `empty-state`, `progress-ring`, `toggle`, `dropdown`, `confirm-dialog`
+- [x] `src/app/layout.tsx`, `src/app/page.tsx` (redirects to /today or /login)
+- [x] `src/app/manifest.ts` (PWA manifest), `src/app/offline/page.tsx`
+- [x] Providers: `supabase-provider.tsx`
+- [x] Types: `database.ts`, `models.ts`
+- [x] Utils: `cn.ts`, `dates.ts`, `time-blocks.ts`, `recurrence.ts`, `streaks.ts`
+- [x] Constants: `src/lib/constants.ts`
+- [x] Stores: `timer-store.ts`, `ui-store.ts`
 
-#### Phase 2: Tasks & Lists
-- [ ] Tasks/lists CRUD hooks with optimistic updates
-- [ ] Inbox capture (quick-add input, auto-focus)
-- [ ] Task list with checkbox, title, due date badge
-- [ ] Task editor drawer (mobile) / modal (desktop) — title, description, list, priority, due date, recurrence
-- [ ] Recurring task config (daily/weekly/monthly, day-of-week selector)
-- [ ] Auto-create Inbox list for new users on signup
-- [ ] Tasks page with list tabs
+#### Phase 2: Tasks & Lists ✅
+- [x] `use-tasks.ts`, `use-lists.ts` (CRUD hooks with optimistic updates)
+- [x] `inbox-capture.tsx` (quick-add, auto-focus)
+- [x] `task-item.tsx`, `task-list.tsx` (checkbox, title, due date badge)
+- [x] `task-editor.tsx` (drawer/modal — title, description, list, priority, due date, recurrence)
+- [x] `recurring-config.tsx` (daily/weekly/monthly, day-of-week selector)
+- [x] `list-selector.tsx`
+- [x] `src/app/(app)/tasks/page.tsx` (with list tabs)
 
-#### Phase 3: Today View (Home)
-- [ ] Server Component fetches today's blocks, top-3 tasks, remaining tasks, habit completions
-- [ ] Next block card (current/upcoming block + supportive message)
-- [ ] "Start next 10 minutes" focus button (large tap target, links to timer)
-- [ ] Daily Top 3 checklist (3 slots, prompt to add if fewer)
-- [ ] Remaining tasks (collapsed by default, count badge)
-- [ ] Habit mini-grid (compact circles, tap to toggle)
+#### Phase 3: Today View ✅
+- [x] `next-block-card.tsx` (current/upcoming block + supportive message)
+- [x] `focus-button.tsx` (large tap target, links to timer)
+- [x] `daily-top-three.tsx` (3 slots, prompt if fewer)
+- [x] `remaining-tasks.tsx` (collapsed, count badge)
+- [x] `habit-mini-grid.tsx` (compact circles, tap to toggle)
+- [x] `src/app/(app)/today/page.tsx`
 
-#### Phase 4: Calendar & Time Blocks
-- [ ] Time block CRUD hooks
-- [ ] Day view: time column (6AM–11PM, 30-min slots), absolutely-positioned blocks
-- [ ] Drag-and-drop via `@dnd-kit`: droppable slots, draggable blocks, vertical axis constraint
-- [ ] Touch handling: 200ms delay activation (distinguish scroll from drag)
-- [ ] "Now" line (red indicator, updates every 60s)
-- [ ] Week view: 7 columns, compact blocks, tap day to switch to day view
-- [ ] Quick-add popover on empty slot tap (title + duration presets + category)
-- [ ] Block editor (full form in drawer/modal)
+#### Phase 4: Calendar & Time Blocks ✅
+- [x] `use-time-blocks.ts` (CRUD hooks)
+- [x] Day view with time column (6AM–11PM, 30-min slots)
+- [x] Drag-and-drop via `@dnd-kit` (vertical axis, 200ms touch delay)
+- [x] `now-line.tsx` (red indicator, updates every 60s)
+- [x] Week view (7 columns, compact blocks)
+- [x] `quick-add-block.tsx` (popover on empty slot tap)
+- [x] `block-editor.tsx` (full form in drawer/modal)
+- [x] `time-block.tsx`, `time-slot.tsx`
+- [x] `src/app/(app)/calendar/page.tsx`
 
-#### Phase 5: Habits
-- [ ] Habits CRUD hooks
-- [ ] Habit cards with today's status + current streak
-- [ ] Weekly grid (7 columns, filled/empty circles per habit)
-- [ ] Monthly heatmap (30-day grid, color intensity by completion count)
-- [ ] Streak calculation utility (walks backwards from today, respects frequency schedule)
-- [ ] Habit editor (name, color, frequency, reminder time)
+#### Phase 5: Habits ✅
+- [x] `use-habits.ts` (CRUD hooks)
+- [x] `habit-card.tsx` (today status + streak)
+- [x] `weekly-grid.tsx` (7 columns, filled/empty circles)
+- [x] `monthly-heatmap.tsx` (30-day grid, color intensity)
+- [x] `streak-badge.tsx`
+- [x] `src/lib/utils/streaks.ts` (streak calculation)
+- [x] `src/app/(app)/habits/page.tsx` (with habit editor)
 
-#### Phase 6: Focus Timer
-- [ ] Web Worker (`timer-worker.ts`) using `Date.now()` absolute reference (accurate when tab backgrounded)
-- [ ] Worker ticks every 250ms, posts remaining seconds
-- [ ] Zustand timer store (persists across page navigations)
-- [ ] `useTimer` hook wrapping worker + store
-- [ ] Preset picker (10/15/25/45/60 min), "Add 5 minutes" button
-- [ ] Large circular progress ring display
-- [ ] Start/Pause/Reset controls (large, tactile)
-- [ ] End-of-timer prompt: "What did you accomplish?" with quick-select options
-- [ ] Save `timer_sessions` to Supabase
-- [ ] Completion sound + push notification
+#### Phase 6: Focus Timer ✅
+- [x] `src/workers/timer-worker.ts` (Web Worker, `Date.now()` absolute, 250ms tick)
+- [x] `src/stores/timer-store.ts` (Zustand, persists across navigations)
+- [x] `use-timer.ts` (wraps worker + store)
+- [x] `preset-picker.tsx` (10/15/25/45/60 min, "Add 5 min")
+- [x] `timer-display.tsx` (large circular progress ring)
+- [x] `timer-controls.tsx` (Start/Pause/Reset, large tap targets)
+- [x] `end-prompt.tsx` ("What did you accomplish?" quick-select)
+- [x] `src/app/(app)/timer/page.tsx`
+
+#### Phase 7: Weekly Planning ✅
+- [x] Multi-step planning flow (review → goals → blocks → summary)
+- [x] Goals management (add/remove weekly goals)
+- [x] Energy rating (1–5)
+- [x] Reflection textarea
+- [x] Focus areas (add/remove)
+- [x] Week navigation (prev/next)
+- [x] Saves `weekly_plans` record to Supabase
+- [x] `src/app/(app)/plan/page.tsx` (all implemented inline)
 
 ---
 
 ### PASS 2 — Expand
 
-#### Phase 7: Weekly Planning
-- [ ] Multi-step wizard: review → goals → blocks → summary
-- [ ] Review step: last week stats, energy rating, reflection text
-- [ ] Goals step: 3–5 weekly goals, focus areas
-- [ ] Blocks step: apply routine template, adjust manually
-- [ ] Summary step: overview + confirm + save `weekly_plans` record
+#### Phase 8: Accountability Partner ⚠️ PARTIAL
+- [x] `src/app/(app)/partner/page.tsx` — invite form, connection status, partner summary view, nudge button (all inline, 297 lines)
+- [x] Invite link creation + copy-to-clipboard (client-side token, no email sending yet)
+- [x] Partner unlink with confirm dialog
+- [ ] **`src/app/api/partner/invite/route.ts`** — server-side: create token in DB, send invite email
+- [ ] **`src/app/api/partner/accept/route.ts`** — validate token, create `partner_links` record
+- [ ] Verify `get_partner_summary()` RPC is wired into partner page
 
-#### Phase 8: Accountability Partner
-- [ ] API routes: invite (create token, send email/link) + accept (validate token, create link)
-- [ ] Partner page: invite form + connection status
-- [ ] Partner view: limited dashboard via `get_partner_summary()` RPC
-- [ ] Nudge button: send preset encouragement push notification
+#### Phase 9: PWA & Notifications ⚠️ PARTIAL
+- [x] `public/sw.js` — cache-first static, network-first navigation, offline fallback
+- [x] `src/app/manifest.ts` — standalone display, Saturn branding
+- [x] `src/app/offline/page.tsx`
+- [ ] Push event handler in `sw.js` (handle incoming push messages, show notification)
+- [ ] PWA install prompt component (`src/components/ui/pwa-install-prompt.tsx`)
+- [ ] Push subscription management (`src/hooks/use-push-notifications.ts`)
+- [ ] **`src/app/api/notifications/subscribe/route.ts`** — save push subscription to DB
+- [ ] **`src/app/api/notifications/send/route.ts`** — send push notification via Web Push
+- [ ] **`src/app/api/cron/reminders/route.ts`** — scheduled: upcoming blocks, daily start, weekly planning prompt
+- [ ] `src/stores/offline-queue.ts` (Zustand offline mutation queue for replay on reconnect)
 
-#### Phase 9: PWA & Notifications
-- [ ] Web App Manifest (`manifest.ts`) — standalone display, Saturn branding, icons
-- [ ] Service worker (`public/sw.js`): cache-first static, stale-while-revalidate pages, network-first API
-- [ ] Offline fallback page
-- [ ] PWA install prompt component
-- [ ] Push subscription management
-- [ ] API routes: subscribe + send notifications
-- [ ] Cron route: scheduled reminders (upcoming blocks, daily start, weekly planning)
-
-#### Phase 10: Seed Data, Polish & README
-- [ ] `supabase/seed.sql`: "ADHD Starter Week", "Morning Routine", "Shutdown Routine" templates
-- [ ] Responsive testing at 375px, 390px, 768px, 1280px
-- [ ] PWA icons (SVG-based PNGs for all required sizes)
-- [ ] README: setup, local dev, deploy, architecture docs
-- [ ] `.env.example` with all required variables documented
-- [ ] Final verification checklist (see below)
+#### Phase 10: Seed Data, Polish & README ⚠️ PARTIAL
+- [x] `supabase/seed.sql` — routine templates seeded
+- [ ] PWA icons — generate all required sizes and place in `public/icons/` (update manifest)
+- [ ] `README.md` — setup, local dev, deploy, architecture
+- [ ] Responsive verification at 375px, 390px, 768px, 1280px
 
 ---
 
@@ -160,50 +161,54 @@ Mobile-first PWA for ADHD users providing external structure through time-blocki
 - [ ] **Calendar:** Create blocks, drag to reschedule, now line visible
 - [ ] **Habits:** Create, toggle daily, verify streaks, view heatmap
 - [ ] **Timer:** Start 1-min timer, background tab 30s, verify accurate completion
-- [ ] **Planning:** Complete full wizard, verify blocks generated on calendar
+- [ ] **Planning:** Set goals, energy rating, reflection; saves week plan
 - [ ] **Partner:** Invite, accept, view limited data, send nudge
 - [ ] **PWA:** Installable on Chrome/Safari, cached pages load offline
 - [ ] **Responsive:** All pages tested at 375px, 768px, 1280px
 
 ---
 
-## Project Structure (target)
+## Project Structure (as built)
 
 ```
 src/
 ├── app/
-│   ├── (auth)/          # login, signup, forgot-password, callback
-│   ├── (app)/           # authenticated routes with app shell
-│   │   ├── today/
-│   │   ├── calendar/
-│   │   ├── tasks/
-│   │   ├── habits/
-│   │   ├── plan/
-│   │   ├── partner/
-│   │   ├── timer/
-│   │   └── settings/
-│   └── api/             # notifications, partner, cron routes
+│   ├── (auth)/          # login, signup, forgot-password, callback ✅
+│   ├── (app)/           # authenticated routes ✅
+│   │   ├── today/       ✅
+│   │   ├── calendar/    ✅
+│   │   ├── tasks/       ✅
+│   │   ├── habits/      ✅
+│   │   ├── plan/        ✅
+│   │   ├── partner/     ✅ (UI only — API routes missing)
+│   │   ├── timer/       ✅
+│   │   └── settings/    ✅
+│   ├── api/             ❌ MISSING — partner invite, notifications, cron
+│   └── offline/         ✅
 ├── components/
-│   ├── ui/              # button, input, card, modal, drawer, etc.
-│   ├── layout/          # app shell, bottom nav, sidebar, header
-│   ├── today/
-│   ├── calendar/
-│   ├── tasks/
-│   ├── habits/
-│   ├── plan/
-│   ├── partner/
-│   └── timer/
+│   ├── ui/              ✅ all primitives
+│   ├── layout/          ✅ app-shell, bottom-nav, sidebar, header
+│   ├── today/           ✅
+│   ├── calendar/        ✅
+│   ├── tasks/           ✅
+│   ├── habits/          ✅
+│   ├── timer/           ✅
+│   ├── plan/            — (wizard inline in page, no separate components needed)
+│   └── partner/         — (UI inline in page)
 ├── lib/
-│   ├── supabase/        # client.ts, server.ts, middleware.ts, admin.ts
-│   ├── utils/           # cn.ts, dates.ts, time-blocks.ts, recurrence.ts, streaks.ts
-│   ├── constants.ts
-│   └── seed.ts
-├── hooks/
-├── stores/              # timer-store, ui-store, offline-queue (Zustand)
-├── providers/
-├── types/               # database.ts, models.ts, api.ts
-└── workers/
-    └── timer-worker.ts
+│   ├── supabase/        ✅ client, server, admin, middleware
+│   └── utils/           ✅ cn, dates, time-blocks, recurrence, streaks
+├── hooks/               ✅ use-tasks, use-lists, use-time-blocks, use-habits, use-timer, use-media-query
+├── stores/              ✅ timer-store, ui-store | ❌ offline-queue missing
+├── providers/           ✅ supabase-provider | ❌ notification-provider missing
+├── types/               ✅ database.ts, models.ts
+└── workers/             ✅ timer-worker.ts
+public/
+├── sw.js                ✅ (missing push handler)
+└── icons/               ❌ MISSING — PWA icons
+supabase/
+├── migrations/          ✅ all 9
+└── seed.sql             ✅
 ```
 
 ---
@@ -213,7 +218,7 @@ src/
 - **Server Components by default** — `'use client'` only for interactivity (timers, drag-drop, checkboxes, forms)
 - **Data pattern:** Server Component fetches → passes to Client Component as props → Client manages mutations via hooks
 - **Navigation:** Mobile bottom nav (Today, Calendar, Tasks, Habits, More) / Desktop sidebar
-- **Offline:** Service worker caches app shell; Zustand offline-queue replays mutations on reconnect
+- **Offline:** Service worker caches app shell; Zustand offline-queue stores mutations for replay on reconnect
 
 ## ADHD Design Principles
 

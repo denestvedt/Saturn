@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  /* Saturn color palette - calming, not overstimulating */
+  --color-saturn-bg: #FAFAF9;
+  --color-saturn-surface: #FFFFFF;
+  --color-saturn-primary: #6366F1;
+  --color-saturn-primary-hover: #5558E6;
+  --color-saturn-secondary: #8B5CF6;
+  --color-saturn-accent: #F59E0B;
+  --color-saturn-success: #10B981;
+  --color-saturn-warning: #F59E0B;
+  --color-saturn-danger: #EF4444;
+  --color-saturn-muted: #9CA3AF;
+  --color-saturn-text: #1F2937;
+  --color-saturn-text-secondary: #6B7280;
+  --color-saturn-border: #E5E7EB;
+
+  /* Category colors for time blocks */
+  --color-category-focus: #6366F1;
+  --color-category-meeting: #EC4899;
+  --color-category-break: #10B981;
+  --color-category-routine: #F59E0B;
+  --color-category-personal: #8B5CF6;
+  --color-category-admin: #6B7280;
+
+  /* Spacing for tap targets */
+  --spacing-tap: 44px;
+  --spacing-tap-lg: 56px;
+
+  /* Border radius */
+  --radius-card: 16px;
+  --radius-button: 12px;
+
+  /* Animations */
+  --animate-slide-up: slide-up 0.3s ease-out;
+  --animate-pulse-gentle: pulse 3s ease-in-out infinite;
+  --animate-fade-in: fade-in 0.2s ease-out;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Base styles */
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--color-saturn-text);
+  background-color: var(--color-saturn-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent pull-to-refresh on iOS PWA */
+html {
+  overscroll-behavior: none;
+}
+
+/* Safe area insets for PWA */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Hide scrollbar but allow scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Focus ring for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--color-saturn-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

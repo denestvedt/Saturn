@@ -1,14 +1,20 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { Settings2 } from 'lucide-react'
 import { Header } from '@/components/layout/header'
 import { NextBlockCard } from '@/components/today/next-block-card'
 import { FocusButton } from '@/components/today/focus-button'
 import { DailyTopThree } from '@/components/today/daily-top-three'
 import { RemainingTasks } from '@/components/today/remaining-tasks'
 import { HabitMiniGrid } from '@/components/today/habit-mini-grid'
+import { WeeklyPlanWidget } from '@/components/today/weekly-plan-widget'
+import { TimerWidget } from '@/components/today/timer-widget'
+import { PartnerWidget } from '@/components/today/partner-widget'
+import { DashboardEditor } from '@/components/today/dashboard-editor'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSupabase } from '@/providers/supabase-provider'
+import { useDashboardStore } from '@/stores/dashboard-store'
 import { format } from 'date-fns'
 import type { Task, TimeBlock, Habit, HabitCompletion } from '@/types/models'
 
@@ -19,6 +25,8 @@ export default function TodayPage() {
   const [blocks, setBlocks] = useState<TimeBlock[]>([])
   const [habits, setHabits] = useState<Habit[]>([])
   const [completions, setCompletions] = useState<HabitCompletion[]>([])
+
+  const { widgets, setEditing } = useDashboardStore()
 
   const today = format(new Date(), 'yyyy-MM-dd')
 
@@ -122,6 +130,33 @@ export default function TodayPage() {
 
   const greeting = getGreeting()
 
+  const enabledWidgets = widgets.filter((w) => w.enabled)
+
+  const widgetComponents: Record<string, React.ReactNode> = {
+    'next-block': <NextBlockCard block={nextBlock} isCurrentBlock={!!currentBlock} />,
+    'focus-button': <FocusButton />,
+    'top-three': (
+      <DailyTopThree
+        tasks={topThree}
+        onToggle={toggleTask}
+        onAdd={() => {
+          window.location.href = '/tasks'
+        }}
+      />
+    ),
+    'remaining-tasks': <RemainingTasks tasks={remaining} onToggle={toggleTask} />,
+    'habits': (
+      <HabitMiniGrid
+        habits={habits}
+        completions={completions}
+        onToggle={toggleHabit}
+      />
+    ),
+    'weekly-plan': <WeeklyPlanWidget />,
+    'timer-stats': <TimerWidget />,
+    'partner': <PartnerWidget />,
+  }
+
   if (loading) {
     return (
       <div className="min-h-full">
@@ -139,26 +174,39 @@ export default function TodayPage() {
 
   return (
     <div className="min-h-full">
-      <Header title="Today" subtitle={greeting} />
+      <Header
+        title="Today"
+        subtitle={greeting}
+        actions={
+          <button
+            onClick={() => setEditing(true)}
+            className="p-2 rounded-xl text-saturn-muted hover:text-saturn-text hover:bg-gray-100 transition-colors"
+            aria-label="Customize dashboard"
+          >
+            <Settings2 className="w-5 h-5" />
+          </button>
+        }
+      />
 
       <div className="px-4 pb-8 space-y-4 max-w-lg mx-auto">
-        <NextBlockCard block={nextBlock} isCurrentBlock={!!currentBlock} />
-        <FocusButton />
-        <DailyTopThree
-          tasks={topThree}
-          onToggle={toggleTask}
-          onAdd={() => {
-            // Navigate to tasks page to add a top-3 task
-            window.location.href = '/tasks'
-          }}
-        />
-        <RemainingTasks tasks={remaining} onToggle={toggleTask} />
-        <HabitMiniGrid
-          habits={habits}
-          completions={completions}
-          onToggle={toggleHabit}
-        />
+        {enabledWidgets.map((widget) => (
+          <div key={widget.id}>{widgetComponents[widget.id]}</div>
+        ))}
+
+        {enabledWidgets.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-saturn-muted text-sm">No widgets enabled.</p>
+            <button
+              onClick={() => setEditing(true)}
+              className="text-saturn-primary text-sm font-medium mt-2 hover:underline"
+            >
+              Customize your dashboard
+            </button>
+          </div>
+        )}
       </div>
+
+      <DashboardEditor />
     </div>
   )
 }

@@ -3,7 +3,7 @@
 import { type HTMLAttributes } from 'react'
 import { cn } from '@/lib/utils/cn'
 
-export interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {}
+export type SkeletonProps = HTMLAttributes<HTMLDivElement>
 
 export function Skeleton({ className, ...props }: SkeletonProps) {
   return (

@@ -34,7 +34,7 @@ export function Card({
   )
 }
 
-export interface CardHeaderProps extends HTMLAttributes<HTMLDivElement> {}
+export type CardHeaderProps = HTMLAttributes<HTMLDivElement>
 
 export function CardHeader({ className, children, ...props }: CardHeaderProps) {
   return (

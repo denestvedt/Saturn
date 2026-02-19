@@ -17,7 +17,7 @@ export default function SettingsPage() {
   const { supabase, user } = useSupabase()
   const router = useRouter()
 
-  const [profile, setProfile] = useState<Profile | null>(null)
+  const [, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 

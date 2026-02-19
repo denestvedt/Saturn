@@ -1,7 +1,7 @@
 'use client'
 
 import { Clock, ArrowRight } from 'lucide-react'
-import { formatTime, formatTimeRange } from '@/lib/utils/dates'
+import { formatTimeRange } from '@/lib/utils/dates'
 import { ENCOURAGEMENT_MESSAGES } from '@/lib/constants'
 import type { TimeBlock } from '@/types/models'
 import Link from 'next/link'

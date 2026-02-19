@@ -1,4 +1,4 @@
-import { addDays, addWeeks, addMonths, format, getDay } from 'date-fns'
+import { addDays, addMonths, getDay } from 'date-fns'
 import type { RecurrenceRule } from '@/types/models'
 
 /**

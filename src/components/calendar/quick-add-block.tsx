@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
-import { addMinutes, format } from 'date-fns'
+import { addMinutes } from 'date-fns'
 import { cn } from '@/lib/utils/cn'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'

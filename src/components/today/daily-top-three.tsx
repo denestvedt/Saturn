@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+
 import { Star, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import type { Task } from '@/types/models'

@@ -14,7 +14,7 @@ import { useLists } from '@/hooks/use-lists'
 import type { Task } from '@/types/models'
 
 export default function TasksPage() {
-  const { lists, loading: listsLoading, ensureInbox, createList } = useLists()
+  const { lists, loading: listsLoading, ensureInbox } = useLists()
   const [selectedListId, setSelectedListId] = useState<string | undefined>(undefined)
   const { tasks, loading: tasksLoading, createTask, updateTask, deleteTask, toggleTask } = useTasks(selectedListId)
   const [editingTask, setEditingTask] = useState<Task | null>(null)

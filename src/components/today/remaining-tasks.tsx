@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
-import { cn } from '@/lib/utils/cn'
+
 import type { Task } from '@/types/models'
 
 interface RemainingTasksProps {

@@ -9,11 +9,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Skeleton } from '@/components/ui/skeleton'
-import { EmptyState } from '@/components/ui/empty-state'
+
 import { cn } from '@/lib/utils/cn'
 import { useSupabase } from '@/providers/supabase-provider'
 import type { WeeklyPlan, WeeklyGoal } from '@/types/models'
-import { ClipboardList } from 'lucide-react'
+
 
 export default function WeeklyPlanPage() {
   const { supabase, user } = useSupabase()
@@ -307,7 +307,7 @@ export default function WeeklyPlanPage() {
                 Energy Level
               </h2>
               <p className="text-sm text-saturn-text-secondary mb-3">
-                How's your energy this week? This helps plan realistic goals.
+                How&apos;s your energy this week? This helps plan realistic goals.
               </p>
               <div className="flex gap-2">
                 {[1, 2, 3, 4, 5].map((level) => (

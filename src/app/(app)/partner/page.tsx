@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
-import { cn } from '@/lib/utils/cn'
+
 import { useSupabase } from '@/providers/supabase-provider'
 import type { PartnerLink, PartnerInvite, PartnerSummary } from '@/types/models'
 

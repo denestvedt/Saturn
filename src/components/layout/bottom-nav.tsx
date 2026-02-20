@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { useState } from 'react'
-import { Sun, Calendar, CheckSquare, Target, Menu, ClipboardList, Users, Timer, Settings, X } from 'lucide-react'
+import { Sun, Calendar, CheckSquare, Target, Menu, ClipboardList, Lightbulb, Users, Timer, Settings, X } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -17,6 +17,7 @@ const navItems = [
 
 const moreItems = [
   { label: 'Weekly Plan', href: '/plan', icon: ClipboardList },
+  { label: 'Ideas', href: '/ideas', icon: Lightbulb },
   { label: 'Partner', href: '/partner', icon: Users },
   { label: 'Timer', href: '/timer', icon: Timer },
   { label: 'Settings', href: '/settings', icon: Settings },

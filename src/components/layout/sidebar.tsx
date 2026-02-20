@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { Sun, Calendar, CheckSquare, Target, ClipboardList, Users, Timer, Settings, LogOut } from 'lucide-react'
+import { Sun, Calendar, CheckSquare, Target, ClipboardList, Lightbulb, Users, Timer, Settings, LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import { useSupabase } from '@/providers/supabase-provider'
 import { useRouter } from 'next/navigation'
@@ -16,6 +16,7 @@ const mainNav = [
 
 const secondaryNav = [
   { label: 'Weekly Plan', href: '/plan', icon: ClipboardList },
+  { label: 'Ideas', href: '/ideas', icon: Lightbulb },
   { label: 'Partner', href: '/partner', icon: Users },
   { label: 'Timer', href: '/timer', icon: Timer },
 ]

@@ -132,6 +132,16 @@ export default function TodayPage() {
 
   const enabledWidgets = widgets.filter((w) => w.enabled)
 
+  const gearButton = (
+    <button
+      onClick={() => setEditing(true)}
+      className="p-2 rounded-xl text-saturn-muted hover:text-saturn-text bg-saturn-surface border border-saturn-border hover:bg-gray-100 transition-colors"
+      aria-label="Customize dashboard"
+    >
+      <Settings2 className="w-5 h-5" />
+    </button>
+  )
+
   const widgetComponents: Record<string, React.ReactNode> = {
     'next-block': <NextBlockCard block={nextBlock} isCurrentBlock={!!currentBlock} />,
     'focus-button': <FocusButton />,
@@ -160,7 +170,7 @@ export default function TodayPage() {
   if (loading) {
     return (
       <div className="min-h-full">
-        <Header title="Today" />
+        <Header title="Today" actions={gearButton} />
         <div className="px-4 space-y-4 max-w-lg mx-auto">
           <Skeleton className="h-24 w-full rounded-card" />
           <Skeleton className="h-14 w-full rounded-xl" />
@@ -177,15 +187,7 @@ export default function TodayPage() {
       <Header
         title="Today"
         subtitle={greeting}
-        actions={
-          <button
-            onClick={() => setEditing(true)}
-            className="p-2 rounded-xl text-saturn-muted hover:text-saturn-text hover:bg-gray-100 transition-colors"
-            aria-label="Customize dashboard"
-          >
-            <Settings2 className="w-5 h-5" />
-          </button>
-        }
+        actions={gearButton}
       />
 
       <div className="px-4 pb-8 space-y-4 max-w-lg mx-auto">

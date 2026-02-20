@@ -13,6 +13,7 @@ export const NAV_ITEMS = [
 
 export const MORE_ITEMS = [
   { label: 'Weekly Plan', href: '/plan', icon: 'clipboard-list' },
+  { label: 'Ideas', href: '/ideas', icon: 'lightbulb' },
   { label: 'Partner', href: '/partner', icon: 'users' },
   { label: 'Timer', href: '/timer', icon: 'timer' },
   { label: 'Settings', href: '/settings', icon: 'settings' },
